@@ -3,7 +3,7 @@
 把原始签到 TSV（无表头，`user_id / checkin_time / latitude / longitude / location_id`）清洗为
 带表头 CSV，供 `db.load` 导入两个 SQLite 分片节点。
 
-## 对下游的固定约定（不要改）
+## 对下游的固定约定
 
 | 约定 | 位置 | 使用者 |
 | --- | --- | --- |
