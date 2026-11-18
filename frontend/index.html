@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Gowalla 签到查询</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <main>
+    <h1>Gowalla 签到查询</h1>
+    <p id="nodes" role="status">正在读取节点数据…</p>
+    <form id="query">
+      <fieldset>
+        <legend>筛选条件</legend>
+        <label>用户 ID<input name="user_id"></label>
+        <label>开始时间（UTC）<input name="start" type="date"></label>
+        <label>结束时间（UTC，不含当天）<input name="end" type="date"></label>
+        <label>经度下界（西）<input name="west" type="number" min="-180" max="180" step="any"></label>
+        <label>经度上界（东）<input name="east" type="number" min="-180" max="180" step="any"></label>
+        <label>纬度下界（南）<input name="south" type="number" min="-90" max="90" step="any"></label>
+        <label>纬度上界（北）<input name="north" type="number" min="-90" max="90" step="any"></label>
+        <button>查询</button>
+      </fieldset>
+    </form>
+    <p id="status" role="status"></p>
+    <figure>
+      <svg id="points" viewBox="0 0 720 360" role="img" aria-label="当前页签到点的全球经纬度分布">
+        <path d="M360 0V360 M0 180H720" stroke="#90aaad" fill="none"/>
+        <g id="markers"></g>
+      </svg>
+      <figcaption>当前页签到点 · 全球经纬度坐标 · 0 号节点蓝色，1 号节点棕色</figcaption>
+    </figure>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>用户 ID</th><th>签到时间（UTC）</th><th>纬度</th><th>经度</th><th>地点 ID</th><th>节点</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <nav aria-label="分页">
+      <button id="previous" disabled>上一页</button>
+      <button id="next" disabled>下一页</button>
+    </nav>
+  </main>
+</body>
+</html>
