@@ -1,0 +1,218 @@
+{
+  "kind": "PUBLIC_SYNTHETIC_TEST_DATA",
+  "coordinate_reference_system": "WGS84 longitude/latitude decimal degrees; no real personal records",
+  "rules_version": "gowalla-upstream-238168f-db-1e1c602-web-v3",
+  "source_record_count": 18,
+  "tsv_physical_rows": 19,
+  "formatted_file_expected_physical_rows_after_normalization": 18,
+  "tsv_expected": {
+    "scanned_rows": 19,
+    "rejected_rows": 7,
+    "valid_rows": 12,
+    "duplicates": 2,
+    "inserted": 10,
+    "node_counts": [
+      6,
+      4
+    ],
+    "reasons": {
+      "blank_line": 1,
+      "invalid_field_count": 0,
+      "missing_id": 1,
+      "invalid_time": 1,
+      "invalid_coordinates": 1,
+      "null_island": 1,
+      "conflict_same_time": 1,
+      "speed_anomaly": 1
+    }
+  },
+  "csv_json_jsonl_expected": {
+    "scanned_rows": 18,
+    "rejected_rows": 6,
+    "valid_rows": 12,
+    "duplicates": 2,
+    "inserted": 10,
+    "node_counts": [
+      6,
+      4
+    ]
+  },
+  "coordinate_repairs": 5,
+  "unique_users": 10,
+  "unique_locations": 6,
+  "month_counts": {
+    "2010-10": 10
+  },
+  "location_counts": {
+    "synthetic-plaza": 5,
+    "synthetic-station": 1,
+    "synthetic-speed-start": 1,
+    "synthetic-park": 1,
+    "synthetic-time-first": 1,
+    "synthetic-museum": 1
+  },
+  "queries": {
+    "timezone": {
+      "params": {
+        "start": "2010-10-19T02:00:00Z",
+        "end": "2010-10-19T03:00:00Z"
+      },
+      "expected_users": [
+        "synthetic-u2"
+      ]
+    },
+    "rectangle": {
+      "params": {
+        "west": -97.8,
+        "east": -97.7,
+        "south": 30.2,
+        "north": 30.3
+      },
+      "expected_count": 5
+    },
+    "radius": {
+      "params": {
+        "center_lon": -97.75,
+        "center_lat": 30.27,
+        "radius_m": 1500
+      },
+      "expected_users": [
+        "synthetic-u2"
+      ]
+    }
+  },
+  "cleaned_records": [
+    {
+      "user_id": "synthetic-u1",
+      "checkin_time": "2010-10-19T23:55:27+00:00",
+      "latitude": 30.235909,
+      "longitude": -97.79514,
+      "location_id": "synthetic-park"
+    },
+    {
+      "user_id": "synthetic-u10",
+      "checkin_time": "2010-10-18T12:00:00+00:00",
+      "latitude": 31.27,
+      "longitude": -96.75,
+      "location_id": "synthetic-plaza"
+    },
+    {
+      "user_id": "synthetic-u11",
+      "checkin_time": "2010-10-18T12:00:00+00:00",
+      "latitude": 31.27,
+      "longitude": -96.75,
+      "location_id": "synthetic-plaza"
+    },
+    {
+      "user_id": "synthetic-u12",
+      "checkin_time": "2010-10-18T13:00:00+00:00",
+      "latitude": 30.25,
+      "longitude": -97.75,
+      "location_id": "synthetic-speed-start"
+    },
+    {
+      "user_id": "synthetic-u13",
+      "checkin_time": "2010-10-18T14:00:00+00:00",
+      "latitude": 30.25,
+      "longitude": -97.75,
+      "location_id": "synthetic-time-first"
+    },
+    {
+      "user_id": "synthetic-u2",
+      "checkin_time": "2010-10-19T02:00:00+00:00",
+      "latitude": 30.269103,
+      "longitude": -97.749395,
+      "location_id": "synthetic-station"
+    },
+    {
+      "user_id": "synthetic-u3",
+      "checkin_time": "2010-10-17T23:42:03+00:00",
+      "latitude": 30.255731,
+      "longitude": -97.763386,
+      "location_id": "synthetic-museum"
+    },
+    {
+      "user_id": "synthetic-u7",
+      "checkin_time": "2010-10-18T12:00:00+00:00",
+      "latitude": 31.27,
+      "longitude": -96.75,
+      "location_id": "synthetic-plaza"
+    },
+    {
+      "user_id": "synthetic-u8",
+      "checkin_time": "2010-10-18T12:00:00+00:00",
+      "latitude": 31.27,
+      "longitude": -96.75,
+      "location_id": "synthetic-plaza"
+    },
+    {
+      "user_id": "synthetic-u9",
+      "checkin_time": "2010-10-18T12:00:00+00:00",
+      "latitude": 31.27,
+      "longitude": -96.75,
+      "location_id": "synthetic-plaza"
+    }
+  ],
+  "cleaning_provenance": {
+    "source_ref": "origin/main:cleaning/clean.py",
+    "commit": "753ec0f06be8ba083db0f219d2838a3cfc4c9531",
+    "source_sha256": "954d064b3812efac1fb8110b4b23b3beaef3c5d750a85fea7a00b167154eba83",
+    "method": "git show to temporary directory; direct clean invocation; no change to cleaning/ or db/",
+    "service_end_to_end_revalidation": "pending; direct invocation is not an HTTP or browser result"
+  },
+  "coordinate_repairs_semantics": "Unmodified upstream reported counter; not the number of rows whose coordinates actually changed, and not proof of correct majority selection.",
+  "coordinate_repairs_observed_in_output": 3,
+  "upstream_cleaning_stats": {
+    "input": 18,
+    "valid": 14,
+    "duplicate": 2,
+    "invalid_coordinates": 1,
+    "missing_id": 1,
+    "invalid_time": 1,
+    "null_island": 1,
+    "blank_line": 1,
+    "coord_conflict_locations": 1,
+    "coord_repair": 5,
+    "speed_anomaly": 1,
+    "conflict_same_time": 1,
+    "output": 10,
+    "users": 10,
+    "locations": 6,
+    "config": {
+      "dedupe": true,
+      "max_speed_kmh": 1000.0,
+      "repair_coords": true,
+      "min_user_checkins": 0,
+      "min_loc_checkins": 0
+    }
+  },
+  "known_upstream_issue": {
+    "status": "OPEN; ownership handed to cleaning module maintainer; previous local fix withdrawn",
+    "plaza_true_mode": {
+      "latitude": 30.27,
+      "longitude": -97.75,
+      "source_count": 3
+    },
+    "plaza_selected_by_upstream": {
+      "latitude": 31.27,
+      "longitude": -96.75,
+      "source_count": 2
+    },
+    "reported_repairs": 5,
+    "observed_changed_rows": 3,
+    "accuracy_conclusion": "This fixture exposes the stale base count defect; output intentionally follows unchanged upstream behavior rather than silently repairing it in fullstack code."
+  },
+  "historical_withdrawn_local_fix": {
+    "rules_version": "gowalla-clean-coordfix-db-1e1c602-v2",
+    "coordinate_repairs": 2,
+    "rectangle_count": 10,
+    "radius_count": 6,
+    "status": "Historical result only. The local algorithm edit was withdrawn to respect module ownership; do not use it as current acceptance."
+  },
+  "source_files_sha256": {
+    "review-anomalies.tsv": "9dfbe9c18900077bb317e3bb32325b6d9d5d3973aece50ca239b74e37d59d4e0",
+    "review-checkins.csv": "302e9be29952b03746a778a27e8ca1ecb4f668258240b4f3256a09fea6b9453e",
+    "review-checkins.json": "9b2a7d0f923a3e1a21bf61b07368650b6e1d9fb3bb753ff093d47768e8507628",
+    "review-checkins.jsonl": "08cecdb8d112dd9e108dd212490ace821e8b7e75c4f3d0201a64b1064750737b"
+  }
+}

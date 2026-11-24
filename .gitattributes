@@ -1,0 +1,1 @@
+raw/Gowalla_totalCheckins.txt filter=lfs diff=lfs merge=lfs -text

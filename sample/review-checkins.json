@@ -1,0 +1,128 @@
+[
+  {
+    "user_id": "synthetic-u1",
+    "checkin_time": "2010-10-19T23:55:27Z",
+    "latitude": "30.235909",
+    "longitude": "-97.795140",
+    "location_id": "synthetic-park"
+  },
+  {
+    "user_id": "synthetic-u1",
+    "checkin_time": "2010-10-19T23:55:27Z",
+    "latitude": "30.235909",
+    "longitude": "-97.795140",
+    "location_id": "synthetic-park"
+  },
+  {
+    "user_id": "synthetic-u1",
+    "checkin_time": "2010-10-19T18:55:27-05:00",
+    "latitude": "30.235909",
+    "longitude": "-97.795140",
+    "location_id": "synthetic-park"
+  },
+  {
+    "user_id": "synthetic-u2",
+    "checkin_time": "2010-10-19T10:00:00+08:00",
+    "latitude": "30.269103",
+    "longitude": "-97.749395",
+    "location_id": "synthetic-station"
+  },
+  {
+    "user_id": "synthetic-u3",
+    "checkin_time": "2010-10-17T23:42:03Z",
+    "latitude": "30.255731",
+    "longitude": "-97.763386",
+    "location_id": "synthetic-museum"
+  },
+  {
+    "user_id": "synthetic-u4",
+    "checkin_time": "2010-10-18T12:00:00Z",
+    "latitude": "999",
+    "longitude": "-97.750000",
+    "location_id": "synthetic-invalid-coordinate"
+  },
+  {
+    "user_id": "",
+    "checkin_time": "2010-10-18T12:00:00Z",
+    "latitude": "30.270000",
+    "longitude": "-97.750000",
+    "location_id": "synthetic-missing-user"
+  },
+  {
+    "user_id": "synthetic-u5",
+    "checkin_time": "not-a-time",
+    "latitude": "30.270000",
+    "longitude": "-97.750000",
+    "location_id": "synthetic-invalid-time"
+  },
+  {
+    "user_id": "synthetic-u6",
+    "checkin_time": "2010-10-18T12:00:00Z",
+    "latitude": "0",
+    "longitude": "0",
+    "location_id": "synthetic-null-island"
+  },
+  {
+    "user_id": "synthetic-u7",
+    "checkin_time": "2010-10-18T12:00:00Z",
+    "latitude": "30.270000",
+    "longitude": "-97.750000",
+    "location_id": "synthetic-plaza"
+  },
+  {
+    "user_id": "synthetic-u8",
+    "checkin_time": "2010-10-18T12:00:00Z",
+    "latitude": "31.270000",
+    "longitude": "-96.750000",
+    "location_id": "synthetic-plaza"
+  },
+  {
+    "user_id": "synthetic-u9",
+    "checkin_time": "2010-10-18T12:00:00Z",
+    "latitude": "31.270000",
+    "longitude": "-96.750000",
+    "location_id": "synthetic-plaza"
+  },
+  {
+    "user_id": "synthetic-u10",
+    "checkin_time": "2010-10-18T12:00:00Z",
+    "latitude": "30.270000",
+    "longitude": "-97.750000",
+    "location_id": "synthetic-plaza"
+  },
+  {
+    "user_id": "synthetic-u11",
+    "checkin_time": "2010-10-18T12:00:00Z",
+    "latitude": "30.270000",
+    "longitude": "-97.750000",
+    "location_id": "synthetic-plaza"
+  },
+  {
+    "user_id": "synthetic-u12",
+    "checkin_time": "2010-10-18T13:00:00Z",
+    "latitude": "30.250000",
+    "longitude": "-97.750000",
+    "location_id": "synthetic-speed-start"
+  },
+  {
+    "user_id": "synthetic-u12",
+    "checkin_time": "2010-10-18T13:00:01Z",
+    "latitude": "51.507400",
+    "longitude": "-0.127800",
+    "location_id": "synthetic-speed-far"
+  },
+  {
+    "user_id": "synthetic-u13",
+    "checkin_time": "2010-10-18T14:00:00Z",
+    "latitude": "30.250000",
+    "longitude": "-97.750000",
+    "location_id": "synthetic-time-first"
+  },
+  {
+    "user_id": "synthetic-u13",
+    "checkin_time": "2010-10-18T14:00:00Z",
+    "latitude": "30.260000",
+    "longitude": "-97.760000",
+    "location_id": "synthetic-time-conflict"
+  }
+]

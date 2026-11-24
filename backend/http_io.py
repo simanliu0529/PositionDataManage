@@ -37,11 +37,15 @@ class Handler(BaseHTTPRequestHandler):
         self.send_bytes(status, "application/json; charset=utf-8", json.dumps(data, ensure_ascii=False).encode())
 
     def send_bytes(self, status, content_type, body):
-        self.send_response(status)
-        self.send_header("Content-Type", content_type)
-        self.send_header("Content-Length", str(len(body)))
-        self.end_headers()
-        self.wfile.write(body)
+        try:
+            self.send_response(status)
+            self.send_header("Content-Type", content_type)
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+        except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
+            # A timed out / cancelled client cannot receive a second error reply.
+            self.close_connection = True
 
     def do_GET(self):
         try:

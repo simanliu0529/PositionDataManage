@@ -1,0 +1,154 @@
+{
+  "recorded_on": "2026-11-24",
+  "scope": "local evidence summary, not a substitute for recipient retesting",
+  "course_source": "docs/references/course-requirements.pdf",
+  "current_batch": {
+    "batch_id": "B-f468284c134945a7a9ab999c",
+    "rules_version": "gowalla-upstream-238168f-db-1e1c602-web-v3:31881b532ae6",
+    "filename": "Gowalla_totalCheckins.txt",
+    "source_hash": "4e02ea12586a1bfb986b468d78672ab256bab5e25559aca2cc23e1ecb55df1ea",
+    "scanned_rows": 6442892,
+    "rejected_rows": 11651,
+    "valid_rows": 6431241,
+    "duplicates": 601,
+    "node_counts": [
+      3225556,
+      3205084
+    ],
+    "cleaning_stats": {
+      "input": 6442892,
+      "valid": 6442728,
+      "duplicate": 601,
+      "null_island": 135,
+      "invalid_coordinates": 29,
+      "coord_conflict_locations": 297,
+      "coord_repair": 2207,
+      "speed_anomaly": 11434,
+      "conflict_same_time": 53,
+      "output": 6430640,
+      "users": 107069,
+      "locations": 1279817,
+      "elapsed_seconds": 284.2,
+      "config": {
+        "dedupe": true,
+        "max_speed_kmh": 1000.0,
+        "repair_coords": true,
+        "min_user_checkins": 0,
+        "min_loc_checkins": 0
+      }
+    },
+    "database_import": {
+      "valid": 6430640,
+      "duplicates": 0,
+      "node_counts": [
+        3225556,
+        3205084
+      ],
+      "inserted": 6430640,
+      "source_bytes": 389366671,
+      "source_sha256": "f84a132e372229c886a94d7472630651ec56031ae0aca6a5691f86827f707dbe",
+      "imported_at_utc": "2026-11-22T14:16:38+00:00",
+      "elapsed_seconds": 436.945,
+      "sharding": "sha256(user_id UTF-8).digest()[0] % 2",
+      "time_format": "YYYY-MM-DDTHH:MM:SS+00:00",
+      "nodes": [
+        {
+          "node": 0,
+          "file": "node-0.sqlite",
+          "count": 3225556,
+          "first_checkin": "2009-02-04T05:17:38+00:00",
+          "last_checkin": "2010-10-23T03:14:47+00:00",
+          "quick_check": "ok",
+          "database_bytes": 781520896
+        },
+        {
+          "node": 1,
+          "file": "node-1.sqlite",
+          "count": 3205084,
+          "first_checkin": "2009-03-13T04:45:18+00:00",
+          "last_checkin": "2010-10-23T05:22:06+00:00",
+          "quick_check": "ok",
+          "database_bytes": 776589312
+        }
+      ]
+    },
+    "timings": {
+      "validating": 0.803,
+      "cleaning": 415.6389,
+      "loading": 436.9824,
+      "verifying": 113.9141,
+      "publishing": 220.4548,
+      "total": 1187.7933
+    }
+  },
+  "full_csv_verification": {
+    "passed": true,
+    "downloaded_count": 6430640,
+    "node_counts": {
+      "0": 3225556,
+      "1": 3205084
+    },
+    "export_seconds": 205.907,
+    "total_seconds": 262.328,
+    "active_unchanged": true
+  },
+  "full_csv_file_bytes": 625078163,
+  "historical_python_run": {
+    "total": 75,
+    "normal_passed": 72,
+    "expected_failures": 3,
+    "seconds": 85.177
+  },
+  "final_export_targeted_run": {
+    "total": 4,
+    "passed": 4,
+    "seconds": 9.961
+  },
+  "full_export_browser": {
+    "passed": 5,
+    "failed": 0
+  },
+  "fixture_csv_rows": 41006,
+  "fixture_geojson_rows": 41005,
+  "upstream_expected_failures": 3,
+  "not_verified": [
+    "production deployment",
+    "Docker runtime",
+    "current-rule repeated query P95",
+    "peak memory",
+    "multi-host failover"
+  ],
+  "raw_logs_in_source_package": false,
+  "team_baseline": "753ec0f06be8ba083db0f219d2838a3cfc4c9531",
+  "note": "Current counts and timing came from the stored active import report. No new full import was performed during handover.",
+  "handover_clean_reproduction": {
+    "python_version": "3.11.4",
+    "system_site_packages": false,
+    "runtime_dependencies": 13,
+    "git_and_data_excluded": true,
+    "python_tests": {
+      "total": 76,
+      "passed": 73,
+      "expected_failures": 3,
+      "seconds": 98.05
+    },
+    "database_tests": {
+      "passed": 11,
+      "seconds": 7.079
+    },
+    "http_smoke": {
+      "passed": true,
+      "isolated": true,
+      "fresh_accounts": true,
+      "published_count": 10,
+      "node_counts": [
+        6,
+        4
+      ],
+      "rectangle_count": 5,
+      "user_time_count": 1,
+      "full_csv_count": 10,
+      "viewer_upload_status": 403
+    }
+  }
+}
