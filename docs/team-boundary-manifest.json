@@ -1,0 +1,17 @@
+{
+  "baseline": "753ec0f06be8ba083db0f219d2838a3cfc4c9531",
+  "files": {
+    "cleaning/README.md": "2d9d05c2f77a664a8d69a61c85e42152f2f1a14eea34e4499204d71f475625d8",
+    "cleaning/clean.py": "954d064b3812efac1fb8110b4b23b3beaef3c5d750a85fea7a00b167154eba83",
+    "db/README.md": "76e341d5244d3c8a23bc6da67063f34378502c45ffcb3525b6fc6f8405eb2c0d",
+    "db/VALIDATION.md": "ede94965d9ead1e8846cb77749d97023e6e622d81e1505c56ef992cc3af770d9",
+    "db/load.py": "4028beb3f8d10bd4c9ffdfb6dc41f6dc8ad89d09cf1ed1c354b3f863419aeade",
+    "db/node.py": "859bb69cae60585e181dcd4d72224dd63a6bb0cf89da4cce954982457fc71b68",
+    "db/run-local.cmd": "51fa64c0398870eb0259796043d51342f8f6e5a02b9761b42eb3f3a212df3d1a",
+    "db/schema.sql": "a2e4384d48c996d5828493ce070d16ef2cf1c5d96e629f8de0c9af6caedb0e13",
+    "db/serve.py": "63ec5c86df9d2bb03ab4a6bea0fcdf10a23faec49fe8f9a15fda04271738dbd5",
+    "db/test_database.py": "96f7f810691430dfdb78b68853bb1f2f5e4d16df5b7d2e9487ae20e9078c1575",
+    "db/verify.py": "95fa3965a690043d055aea422805b15cae65aa8ee869081ecccae88162a3b7a9",
+    "compose.yaml": "887066a2a60e5864c3c358aad3617af815dd3a3f6c896aa96a4cedda7960e78f"
+  }
+}

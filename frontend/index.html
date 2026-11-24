@@ -1,47 +1,438 @@
 <!doctype html>
 <html lang="zh-CN">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Gowalla 签到查询</title>
-  <link rel="stylesheet" href="/style.css">
-  <script src="/app.js" defer></script>
-</head>
-<body>
-  <main>
-    <h1>Gowalla 签到查询</h1>
-    <p id="nodes" role="status">正在读取节点数据…</p>
-    <form id="query">
-      <fieldset>
-        <legend>筛选条件</legend>
-        <label>用户 ID<input name="user_id"></label>
-        <label>开始时间（UTC）<input name="start" type="date"></label>
-        <label>结束时间（UTC，不含当天）<input name="end" type="date"></label>
-        <label>经度下界（西）<input name="west" type="number" min="-180" max="180" step="any"></label>
-        <label>经度上界（东）<input name="east" type="number" min="-180" max="180" step="any"></label>
-        <label>纬度下界（南）<input name="south" type="number" min="-90" max="90" step="any"></label>
-        <label>纬度上界（北）<input name="north" type="number" min="-90" max="90" step="any"></label>
-        <button>查询</button>
-      </fieldset>
-    </form>
-    <p id="status" role="status"></p>
-    <figure>
-      <svg id="points" viewBox="0 0 720 360" role="img" aria-label="当前页签到点的全球经纬度分布">
-        <path d="M360 0V360 M0 180H720" stroke="#90aaad" fill="none"/>
-        <g id="markers"></g>
-      </svg>
-      <figcaption>当前页签到点 · 全球经纬度坐标 · 0 号节点蓝色，1 号节点棕色</figcaption>
-    </figure>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>用户 ID</th><th>签到时间（UTC）</th><th>纬度</th><th>经度</th><th>地点 ID</th><th>节点</th></tr></thead>
-        <tbody id="rows"></tbody>
-      </table>
-    </div>
-    <nav aria-label="分页">
-      <button id="previous" disabled>上一页</button>
-      <button id="next" disabled>下一页</button>
-    </nav>
-  </main>
-</body>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>
+      社交媒体位置签到数据管理服务系统 · 工作台
+    </title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/system.js" defer></script>
+    <script src="/dashboard.js" defer></script>
+    <script src="/app.js" defer>
+    </script>
+  </head>
+  <body class="signed-out">
+<section id="login-page" class="login-layout"><article class="login-brand"><strong>PositionDataManage</strong><h1>社交媒体位置签到<br>数据管理服务系统</h1><p>原始数据导入 → 自动清洗 → 双节点存储<br>按用户、时间和空间查询，在城市地图上探索。</p><div class="login-grid" aria-hidden="true">●　　　　　●<br>　　　●</div></article><form id="login-form" class="card login-card"><h1>登录系统</h1><label>账号<input id="login-username" required maxlength="80" autocomplete="username"></label><label>密码<input id="login-password" type="password" required maxlength="1024" autocomplete="current-password"></label><button id="login-button" disabled>登录</button><p class="hint">使用管理员开通的组内账号。管理员可导入和发布数据，普通用户可查询与导出。</p><p id="login-error" class="error" role="alert"></p></form></section>
+    <header class="topbar">
+      <a href="#home" class="brand">
+        社交媒体位置签到数据管理服务系统
+      </a>
+      <div>
+        <span id="connection">
+          正在连接节点…
+        </span>
+        <span id="account-name" class="mode"></span><button id="logout" class="secondary">退出</button>
+      </div>
+    </header>
+    <aside class="sidebar">
+      <nav aria-label="主导航">
+        <a href="#home" data-page="home">
+          工作台
+        </a>
+        <a href="#imports" data-page="imports" class="admin-only">数据导入</a>
+        <a href="#map" data-page="map">
+          签到地图
+        </a>
+        <a href="#catalog" data-page="catalog">
+          分类浏览
+        </a>
+        <a href="#batches" data-page="batches" class="admin-only">批次管理</a>
+      </nav>
+      <p>
+        GOWALLA
+        <br>
+        <small>
+          空间数据查询工作台
+        </small>
+      </p>
+    </aside>
+    <main><p id="global-message" class="error" role="alert"></p>
+      <section id="home" class="page">
+        <div class="heading">
+          <div>
+            <p class="eyebrow">
+              POSITION DATA / OVERVIEW
+            </p>
+            <h1>
+              工作台
+            </h1>
+          </div>
+          <button id="refresh-nodes" class="secondary">
+            刷新节点状态
+          </button>
+        </div>
+        <p class="intro">
+          清洗、组织、存储与服务：从原始签到文件到可检索的时空数据。
+        </p>
+        <div class="quick-actions" aria-label="主要业务入口">
+          <a class="button admin-only" href="#imports">导入原始数据</a>
+          <a class="button secondary" href="#map">打开签到地图</a>
+          <a class="button secondary" href="#catalog">浏览数据目录</a>
+          <a class="button secondary admin-only" href="#batches">管理数据版本</a>
+        </div>
+        <div id="overview-content" class="overview-content" aria-live="polite"></div>
+        <article class="card summary">
+          <h2>
+            当前查询数据
+          </h2>
+          <p id="nodes" role="status">
+            正在读取节点数据…
+          </p>
+          <p class="hint">
+            仅查询核验通过的已发布批次；正在导入的新数据不会影响当前查询。
+          </p>
+        </article>
+      </section>
+      <section id="map" class="page" hidden>
+        <div class="heading">
+          <div>
+            <p class="eyebrow">
+              POSITION DATA / CHECKINS
+            </p>
+            <h1>
+              签到地图
+            </h1>
+          </div>
+          <span class="badge">
+            当前页按批次查询
+          </span>
+        </div>
+        <div class="query-layout">
+          <form id="query" class="card filters">
+            <h2>
+              筛选条件
+            </h2>
+            <label>
+              用户 ID
+              <input name="user_id" placeholder="全部用户" autocomplete="off">
+            </label>
+            <label>
+              地点 ID
+
+              <input name="location_id" placeholder="全部地点">
+            </label>
+            <label>
+              开始时间（UTC，含）
+              <input name="start" type="datetime-local" step="1">
+            </label>
+            <label>
+              结束时间（UTC，不含）
+              <input name="end" type="datetime-local" step="1">
+            </label>
+            <fieldset>
+              <legend>
+                空间筛选
+              </legend>
+              <div class="tabs" role="group" aria-label="空间筛选方式">
+                <button type="button" data-spatial="none" class="active">
+                  不限
+                </button>
+                <button type="button" data-spatial="bbox">
+                  矩形
+                </button>
+                <button type="button" data-spatial="radius">
+                  半径
+                </button>
+              </div>
+              <div id="bbox-fields" hidden>
+                <p class="hint">
+                  边界包含；不支持跨 180° 经线。
+                </p>
+                <div class="bounds">
+                  <label>
+                    西界（经度）
+                    <input name="west" type="number" min="-180" max="180" step="any">
+                  </label>
+                  <label>
+                    东界（经度）
+                    <input name="east" type="number" min="-180" max="180" step="any">
+                  </label>
+                  <label>
+                    南界（纬度）
+                    <input name="south" type="number" min="-90" max="90" step="any">
+                  </label>
+                  <label>
+                    北界（纬度）
+                    <input name="north" type="number" min="-90" max="90" step="any">
+                  </label>
+                </div>
+              </div>
+              <div id="radius-fields" hidden><label>中心经度<input name="center_lon" type="number" min="-180" max="180" step="any"></label><label>中心纬度<input name="center_lat" type="number" min="-90" max="90" step="any"></label><label>半径（米）<input name="radius_m" type="number" min="1" max="50000" step="any" value="1000"></label></div><p id="radius-note" class="notice" hidden>
+                输入中心坐标，或点击地图空白处选中心。半径为 1–50,000 米，圆形仅作范围预览，查询以服务端结果为准。
+              </p>
+            </fieldset>
+            <label>
+              每页条数
+              <select name="limit">
+                <option value="50">
+                  50 条
+                </option>
+                <option value="2">
+                  2 条（分页演示）
+                </option>
+                <option value="100">
+                  100 条
+                </option>
+                <option value="200">
+                  200 条
+                </option>
+              </select>
+            </label>
+            <div class="actions">
+              <button id="submit-query">
+                查询
+              </button>
+              <button type="button" id="reset-query" class="secondary">
+                重置条件
+              </button>
+            </div>
+            <p id="form-error" class="error" role="alert">
+            </p>
+            <p id="query-memory" class="hint" role="status">
+              最近一次有效查询仅保存在当前标签页。
+            </p>
+          </form>
+          <div class="results-column">
+            <article class="card map-card">
+              <div class="panel-heading">
+                <h2>
+                  签到分布
+                </h2>
+                <div class="actions">
+                  <button id="basemap-toggle" class="secondary" aria-pressed="false">
+                    加载城市底图
+                  </button>
+                  <button id="draw-bbox" class="secondary" aria-pressed="false">
+                    框选范围
+                  </button>
+                  <button id="viewport-query" class="secondary">
+                    按当前视野查询
+                  </button>
+                </div>
+              </div>
+              <p class="hint" id="basemap-status" role="status">
+                当前为离线经纬度视图。可加载城市底图；拖动、缩放不会自动查询。
+              </p>
+              <div class="map-container">
+                <svg id="points" viewBox="0 0 900 420" role="img" aria-label="当前页签到点经纬度视图，可拖动或框选">
+                  <g id="basemap-tiles" pointer-events="none">
+                  </g>
+                  <g id="grid" pointer-events="none">
+                  </g>
+                  <rect id="applied-box" hidden>
+                  </rect>
+                  <rect id="pending-box" hidden></rect>
+                  <rect id="draft-box" hidden>
+                  </rect>
+                  <path id="radius-circle" hidden></path><path id="pending-radius" hidden></path><path id="checkin-track" hidden></path><g id="markers">
+                  </g>
+                </svg>
+                <div class="map-controls">
+                  <button id="zoom-in" aria-label="放大">
+                    ＋
+                  </button>
+                  <button id="zoom-out" aria-label="缩小">
+                    −
+                  </button>
+                  <button id="fit-points">
+                    定位结果
+                  </button>
+                </div>
+                <span class="map-credit">
+                  WGS 84 · 经度 / 纬度
+                  <span id="map-attribution" hidden>
+                    | ©
+                    <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">
+                      OpenStreetMap
+                    </a>
+                    contributors
+                  </span>
+                </span>
+              </div>
+              <div class="map-footer">
+                <span>
+                  <i class="dot blue">
+                  </i>
+                  节点 0
+                  <i class="dot brown">
+                  </i>
+                  节点 1
+                </span>
+                <span id="view-bounds">
+                </span>
+              </div>
+              <p id="query-draft-status" class="hint" role="status">实线：已应用范围；橙色虚线：待提交范围。拖动和缩放只改变视野。</p>
+              <p id="view-result-hint" class="hint" role="status"></p>
+              <div class="actions track-actions"><button id="load-track" class="secondary" disabled>加载签到连线</button><label><input id="show-track" type="checkbox" checked disabled>显示连线</label></div>
+              <p id="track-status" class="hint" role="status">最近成功查询须限定单用户、开始和结束时间。连线按 UTC 日期分段，不代表实际移动路线。</p>
+              <div id="point-detail" class="detail" role="status">
+                点击点位或表格中的“定位”查看签到详情。
+              </div>
+            </article>
+            <article class="card result-card">
+              <div class="panel-heading">
+                <h2>
+                  签到结果
+                </h2>
+                <div class="actions"><button id="latest-query" class="secondary">按最新批次查询</button><button id="export-csv" class="secondary" title="后台导出最近成功条件下的全部匹配记录，并非仅导出当前页" disabled>完整导出 CSV</button><button id="export-geojson" class="secondary" title="后台导出最近成功条件下的全部匹配记录，并非仅导出当前页" disabled>完整导出 GeoJSON</button></div><span id="status" role="status" aria-live="polite">
+                  尚未查询
+                </span>
+              </div>
+              <p id="applied-filters" class="hint">
+                已应用：无
+              </p>
+              <div class="actions query-tools"><button id="share-query" class="secondary" disabled>分享最近成功查询</button><button id="copy-diagnostics" class="secondary">复制查询诊断</button></div>
+              <p id="query-tool-status" class="hint" role="status">分享链接固定查询条件及批次，接收者仍须登录。</p>
+              <p id="export-status" class="hint" role="status">后台完整导出最近成功条件及固定批次的全部匹配记录，不受 10000 条限制。按节点和记录 ID 顺序写出；CSV 对公式样式 ID 加安全前缀，精确保真请选择 GeoJSON。</p>
+              <div class="actions"><a id="export-download" class="secondary" hidden>下载完整文件</a><button id="export-cancel" class="secondary" hidden>取消导出</button><button id="export-resume" class="secondary">刷新导出状态</button></div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>
+                        用户 ID
+                      </th>
+                      <th>
+                        签到时间（UTC）
+                      </th>
+                      <th>
+                        经度
+                      </th>
+                      <th>
+                        纬度
+                      </th>
+                      <th>
+                        地点 ID
+                      </th>
+                      <th>
+                        节点
+                      </th>
+                      <th>
+                        操作
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody id="rows">
+                  </tbody>
+                </table>
+              </div>
+              <p id="empty-state" hidden>
+                没有符合条件的签到记录，请调整筛选条件。
+              </p>
+              <div class="pagination">
+                <button id="previous" class="secondary" disabled>
+                  上一页
+                </button>
+                <span id="page-label">
+                  第 1 页
+                </span>
+                <button id="next" class="secondary" disabled>
+                  下一页
+                </button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section id="catalog" class="page" hidden>
+        <div class="heading">
+          <div>
+            <p class="eyebrow">
+              POSITION DATA / CATALOG
+            </p>
+            <h1>
+              分类浏览
+            </h1>
+          </div>
+          <span class="badge">
+            真实目录 · 整批统计
+          </span>
+        </div>
+        <article class="card">
+          <h2>
+            分类目录
+          </h2>
+          <p class="notice">
+            分类计数统计整个已发布批次；地图和表格仅显示当前页记录。选择分类将固定同一批次进行查询。
+          </p>
+          <button id="catalog-latest" class="secondary">刷新最新目录</button><p id="catalog-status" class="hint" role="status"></p><div class="tabs catalog-tabs" role="group" aria-label="目录维度">
+            <button data-group="user" class="active">
+              按用户
+            </button>
+            <button data-group="month">
+              按月份
+            </button>
+            <button data-group="location">
+              按地点
+            </button>
+          </div>
+          <form id="catalog-search" class="catalog-search">
+            <label>
+              <span id="prefix-label">
+                用户 ID 前缀
+              </span>
+              <input id="catalog-prefix" placeholder="输入前缀，留空显示全部">
+            </label>
+            <button>
+              搜索
+            </button>
+          </form>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th id="catalog-key">
+                    用户 ID
+                  </th>
+                  <th>
+                    当前批次签到数
+                  </th>
+                  <th>
+                    操作
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="catalog-rows">
+              </tbody>
+            </table>
+          </div>
+          <p id="catalog-empty" hidden>
+            没有匹配的分类。
+          </p>
+          <div class="pagination">
+            <button id="catalog-previous" class="secondary">
+              上一页
+            </button>
+            <span id="catalog-page">
+            </span>
+            <button id="catalog-next" class="secondary">
+              下一页
+            </button>
+          </div>
+        </article>
+      </section>
+
+<section id="imports" class="page" hidden>
+  <div class="heading"><h1>数据导入</h1><button id="refresh-jobs" class="secondary">刷新任务</button></div>
+  <article class="card"><h2>上传原始文件</h2><p class="hint">UTF-8：无表头 Gowalla TXT / TSV（用户、时间、纬度、经度、地点）、带表头 CSV、JSON 对象数组或 JSONL。不支持 GeoJSON 导入。</p>
+    <form id="upload-form"><label>选择文件<input type="file" name="file" accept=".txt,.tsv,.csv,.json,.jsonl,.ndjson" required></label>
+      <p id="preview-status" class="hint" role="status">选取文件后，预览前 64 KiB 中最多 5 条记录；最终校验以完整文件为准。</p>
+      <div id="import-preview" class="import-preview" hidden><h3>原始记录预览</h3><div class="table-wrap"><table><thead id="preview-head"></thead><tbody id="preview-rows"></tbody></table></div><fieldset id="mapping-fields" class="mapping-fields" hidden><legend>字段映射</legend><div id="mapping-inputs" class="mapping-grid"></div><p id="mapping-error" class="error" role="alert"></p></fieldset></div>
+      <p class="notice">坐标声明：仅接受 WGS 84 十进制度经纬度。不会自动转换 GCJ-02、BD-09 或投影坐标，请先完成坐标转换。</p>
+      <input type="hidden" name="coordinate_system" value="WGS84">
+      <fieldset class="import-modes"><legend>导入模式</legend><label><input type="radio" name="mode" value="dry_run" checked>试导入：核验并生成报告，不改变当前批次</label><label><input type="radio" name="mode" value="replace">正式替换：上传完整文件，核验通过后自动发布</label></fieldset><button id="upload-button">开始导入</button>
+    </form><p id="upload-status" class="hint" role="status"></p><p id="import-error" class="error" role="alert"></p>
+  </article>
+  <article id="job-report" class="card" hidden><div class="panel-heading"><h2 id="job-title"></h2><span id="job-status" class="badge"></span></div><div id="job-stages" class="actions"></div><div class="metrics"><div>已扫描记录<strong id="scanned">0</strong></div><div>有效记录（含重复）<strong id="valid">0</strong></div><div>清洗剔除<strong id="rejected">0</strong></div><div>重复记录<strong id="duplicates">0</strong></div></div><p id="job-meta" class="hint"></p><p id="job-outcome" role="status"></p><p id="job-timings" class="hint"></p><h3>异常规则汇总</h3><p id="record-basis" class="hint"></p><div class="table-wrap"><table><thead><tr><th>原因</th><th>数量</th><th>占扫描记录比例</th><th id="reason-record-label">源记录编号（最多 5 个）</th></tr></thead><tbody id="reason-rows"></tbody></table></div>
+    <h3>清洗前后记录对照</h3><p id="sample-scope" class="hint"></p><div class="table-wrap"><table class="evidence-table"><thead><tr><th>源记录编号</th><th>清洗前（标准字段）</th><th>清洗后</th><th>结果</th></tr></thead><tbody id="quality-samples"></tbody></table></div><p id="samples-empty" class="hint" hidden>此任务暂无可用的记录样本；历史任务不会自动补写样本。</p>
+    <div class="actions"><button id="retry-job" hidden>重试任务</button><button id="download-report" class="secondary">下载报告</button><button id="job-open-map" hidden>打开签到地图</button></div>
+  </article>
+  <article class="card"><h2>导入任务</h2><p id="job-list-status" class="hint" role="status"></p><div id="job-list" class="job-list"></div><div class="pagination"><button id="jobs-previous" class="secondary" disabled>上一页</button><span id="jobs-page">第 1 页</span><button id="jobs-next" class="secondary" disabled>下一页</button></div></article>
+</section>
+<section id="batches" class="page" hidden><div class="heading"><h1>批次管理</h1><button id="refresh-batches" class="secondary">刷新批次</button></div><article class="card"><p class="notice">切换前会重新核验两个节点。已发布历史快照保留供回退，当前查询固定批次。</p><p id="batch-error" class="error" role="alert"></p><div class="table-wrap"><table><thead><tr><th>批次</th><th>源文件</th><th>状态</th><th>原始行</th><th>剔除</th><th>重复</th><th>节点条数</th><th>操作</th></tr></thead><tbody id="batch-rows"></tbody></table></div><p id="batch-empty" hidden>暂无批次，请先正式导入数据。</p><div class="pagination"><button id="batch-previous" class="secondary">上一页</button><span id="batch-page"></span><button id="batch-next" class="secondary">下一页</button></div><h3>最近切换记录</h3><pre id="audit-log"></pre></article></section>
+</main>
+    <dialog id="copy-dialog"><h2>手动复制</h2><p>浏览器未允许自动复制，请选中下方内容复制。内容可能包含用户 ID 和筛选条件。</p><textarea id="copy-content" readonly rows="8" aria-label="待复制内容"></textarea><form method="dialog"><button>关闭</button></form></dialog>
+    <script src="/workspace.js" defer></script>
+  </body>
 </html>

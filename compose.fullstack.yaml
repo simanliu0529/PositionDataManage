@@ -1,0 +1,54 @@
+﻿x-runtime: &runtime
+  build: .
+  image: position-data-manage:local
+  restart: unless-stopped
+x-settings: &settings
+  CHECKIN_DATA: /app/data
+  CHECKIN_SHARD_0: /shards/node-0
+  CHECKIN_SHARD_1: /shards/node-1
+  CHECKIN_NODE_0: http://node-0:8100
+  CHECKIN_NODE_1: http://node-1:8101
+services:
+  node-0:
+    <<: *runtime
+    command: python -m backend.batch_node /shards/node-0 8100 --host 0.0.0.0
+    volumes:
+      - node-0:/shards/node-0:ro
+  node-1:
+    <<: *runtime
+    command: python -m backend.batch_node /shards/node-1 8101 --host 0.0.0.0
+    volumes:
+      - node-1:/shards/node-1:ro
+  web:
+    <<: *runtime
+    command: python -m backend.app --host 0.0.0.0 --no-worker
+    environment: *settings
+    volumes:
+      - control:/app/data
+      - node-0:/shards/node-0:ro
+      - node-1:/shards/node-1:ro
+    ports:
+      - "127.0.0.1:8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/', timeout=2)"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    depends_on:
+      - node-0
+      - node-1
+  worker:
+    <<: *runtime
+    command: python -m backend.worker
+    environment: *settings
+    volumes:
+      - control:/app/data
+      - node-0:/shards/node-0
+      - node-1:/shards/node-1
+    depends_on:
+      web:
+        condition: service_healthy
+volumes:
+  control:
+  node-0:
+  node-1:
